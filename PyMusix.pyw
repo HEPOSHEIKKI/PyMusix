@@ -1,9 +1,13 @@
+#Copyleft Otto Varteva 2022 :)
+#Licenced under the GNU GPLv3 licence
+
 # Importing all the necessary modules
 from tkinter import *
 from tkinter import filedialog
 import pygame.mixer as mixer        # pip install pygame
 import os
 import pygame
+from sys import platform
 
 
 # Initializing the mixer
@@ -86,31 +90,33 @@ close_button = Button(title_bar, bg="gold",activebackground="gold", text='X',fon
 Label(title_bar, text='PyMusix',bg="gold", bd=2, font=('W95FA', 14),).place(x=5, y=0)
 window = Canvas(root)
 
+if platform == "linux" or platform == "linux2":
+    root.wm_attributes('-type', 'splash')
+elif platform == "win32":
+    from ctypes import windll
 
-from ctypes import windll
+    GWL_EXSTYLE=-20
+    WS_EX_APPWINDOW=0x00040000
+    WS_EX_TOOLWINDOW=0x00000080
 
-GWL_EXSTYLE=-20
-WS_EX_APPWINDOW=0x00040000
-WS_EX_TOOLWINDOW=0x00000080
+    def set_appwindow(root):
+        hwnd = windll.user32.GetParent(root.winfo_id())
+        style = windll.user32.GetWindowLongPtrW(hwnd, GWL_EXSTYLE)
+        style = style & ~WS_EX_TOOLWINDOW
+        style = style | WS_EX_APPWINDOW
+        res = windll.user32.SetWindowLongPtrW(hwnd, GWL_EXSTYLE, style)
+        # re-assert the new window style
+        root.wm_withdraw()
+        root.after(10, lambda: root.wm_deiconify())
 
-def set_appwindow(root):
-    hwnd = windll.user32.GetParent(root.winfo_id())
-    style = windll.user32.GetWindowLongPtrW(hwnd, GWL_EXSTYLE)
-    style = style & ~WS_EX_TOOLWINDOW
-    style = style | WS_EX_APPWINDOW
-    res = windll.user32.SetWindowLongPtrW(hwnd, GWL_EXSTYLE, style)
-    # re-assert the new window style
-    root.wm_withdraw()
-    root.after(10, lambda: root.wm_deiconify())
+    def main():
+        root.wm_title("PyMusix")
+        root.overrideredirect(True)
+        root.after(10, lambda: set_appwindow(root))
+        root.update()
 
-def main():
-    root.wm_title("PyMusix")
-    root.overrideredirect(True)
-    root.after(10, lambda: set_appwindow(root))
-    root.update()
-
-if __name__ == '__main__':
-    main()
+    if __name__ == '__main__':
+        main()
 
 # All the frames
 song_frame = LabelFrame(root, text='Current Song',font="consolas", bg='Grey',fg="white", width=400, height=80, bd=5)

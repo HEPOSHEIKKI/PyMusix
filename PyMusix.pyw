@@ -4,11 +4,10 @@
 # Importing all the necessary modules
 from tkinter import *
 from tkinter import filedialog
-import pygame.mixer as mixer        # pip install pygame
+import pygame.mixer as mixer        
 import os
 import pygame
 from sys import platform
-#sys.path.append(os.path.abspath("C:\\Users\\vartott\\Desktop\\"))
 import notif
 from pathlib import Path
 
@@ -190,7 +189,7 @@ load_btn = Button(button_frame, text='Load Directory', fg="navyblue",bg='gold', 
                   command=lambda: load(playlist))
 load_btn.place(x=10, y=55)
 
-# Label at the bottom that displays the state of the music
+
 
 # Pack
 Label(root, textvariable=song_status,fg="navyblue", bg='gray', font=('consolas', 9, "bold"), justify=LEFT).pack(side=BOTTOM, fill=X)

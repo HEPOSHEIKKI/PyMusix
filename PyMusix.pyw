@@ -83,6 +83,11 @@ def next_selection():
             playlist.selection_set(next_selection)
             play_song(current_song, playlist, song_status)
 
+def kill():
+    pygame.mixer.music.stop()
+    root.destroy()
+
+
 
 # Creating the master GUI
 root = Tk()
@@ -93,9 +98,10 @@ root.resizable(0, 0)
 # Titlebar
 title_bar = Frame(root,bg='gold', relief='ridge', bd=2)
 title_bar.place(y=0)
-close_button = Button(title_bar, bg="gold",activebackground="gold", text='X',font=("W95FA",14,"bold"), command=root.destroy, bd=0, highlightthickness=0)
+close_button = Button(title_bar, bg="gold",activebackground="gold", text='X',font=("W95FA",14,"bold"), command=kill, bd=0, highlightthickness=0)
 Label(title_bar, text='PyMusix',bg="gold", bd=2, font=('W95FA', 14),).place(x=5, y=0)
 window = Canvas(root)
+
 
 if platform == "linux" or platform == "linux2":
     root.wm_attributes('-type', 'splash')

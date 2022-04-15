@@ -8,6 +8,8 @@ import pygame.mixer as mixer        # pip install pygame
 import os
 import pygame
 from sys import platform
+#sys.path.append(os.path.abspath("C:\\Users\\vartott\\Desktop\\"))
+import notif
 
 
 # Initializing the mixer
@@ -15,14 +17,15 @@ mixer.init()
 MUSIC_END = pygame.USEREVENT+1
 pygame.mixer.music.set_endevent(MUSIC_END)
 pygame.init()
+is_stopped = True
 def check_event():
     for event in pygame.event.get():
         if event.type == MUSIC_END:
-          next_selection()
+                next_selection()
     root.after(100, check_event)
 # Play, Stop, Load and Pause & Resume functions
-is_stopped = False
 def play_song(song_name: StringVar, songs_list: Listbox, status: StringVar):
+    global is_stopped
     song_name.set(songs_list.get(ACTIVE))
 
     mixer.music.load(songs_list.get(ACTIVE))
@@ -30,9 +33,11 @@ def play_song(song_name: StringVar, songs_list: Listbox, status: StringVar):
 
     status.set("Song PLAYING")
     is_stopped = False
+    notif.notify(playlist.get(playlist.curselection()))
 
 
 def stop_song(status: StringVar):
+    global is_stopped
     mixer.music.stop()
     status.set("Song STOPPED")
     is_stopped = True
@@ -50,12 +55,14 @@ def load(listbox):
 
 
 def pause_song(status: StringVar):
+    global is_stopped
     mixer.music.pause()
     status.set("Song PAUSED")
     is_stopped = True
 
 
 def resume_song(status: StringVar):
+    global is_stopped
     mixer.music.unpause()
     status.set("Song RESUMED")
     is_stopped = False
@@ -149,7 +156,8 @@ playlist.pack(fill=BOTH, padx=5, pady=5)
 # SongFrame Labels
 Label(song_frame, text='CURRENTLY PLAYING:',bg="gray", font=('consolas', 10, 'bold'),).place(x=5, y=20)
 
-song_lbl = Label(song_frame, textvariable=current_song, bg='gray',bd=3, relief="groove",font=("consolas", 12, "bold"), width=25)
+song_lbl = Label(song_frame, textvariable=current_song, bg='gray',bd=3, relief="groove",font=("consolas", 12, "bold"), width=25,)
+
 song_lbl.place(x=150, y=17)
 
 # Buttons in the main screen

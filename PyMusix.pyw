@@ -10,6 +10,7 @@ import pygame
 from sys import platform
 #sys.path.append(os.path.abspath("C:\\Users\\vartott\\Desktop\\"))
 import notif
+from pathlib import Path
 
 
 # Initializing the mixer
@@ -46,12 +47,14 @@ def stop_song(status: StringVar):
 
 def load(listbox):
     os.chdir(filedialog.askdirectory(title='Open a songs directory'))
-
+    top = os.getcwd()
     tracks = os.listdir()
     listbox.delete(0,'end')
-    for track in tracks:
-        if track.endswith(".mp3"):
-            listbox.insert(END, track)
+    for root, dirs, filenames in os.walk(top, topdown=False):
+        for fl in filenames:
+            currentFile=os.path.join(root, fl)
+            if currentFile.endswith(".mp3"):
+                listbox.insert(END, fl)
 
 
 def pause_song(status: StringVar):
